@@ -2,6 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 
 class WebScrapingPlugin:
+    """
+    A plugin to grab web content and perform related functions, using beautifulsoup
+    """
     def __init__(self):
         pass
 
