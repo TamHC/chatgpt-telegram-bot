@@ -16,7 +16,7 @@ from plugins.worldtimeapi import WorldTimeApiPlugin
 from plugins.whois_ import WhoisPlugin
 from plugins.webshot import WebshotPlugin
 from plugins.iplocation import IpLocationPlugin
-
+from plugins.web_scraping import WebScrapingPlugin
 
 class PluginManager:
     """
