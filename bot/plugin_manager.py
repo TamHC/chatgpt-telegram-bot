@@ -17,6 +17,7 @@ from plugins.whois_ import WhoisPlugin
 from plugins.webshot import WebshotPlugin
 from plugins.iplocation import IpLocationPlugin
 from plugins.web_scraping import WebScrapingPlugin
+from plugins.edge_tts import EdgeTTSTextToSpeech
 
 class PluginManager:
     """
@@ -43,6 +44,7 @@ class PluginManager:
             'webshot': WebshotPlugin,
             'iplocation': IpLocationPlugin,
             'web_scraping': WebScrapingPlugin,
+            'edge_tts': EdgeTTSTextToSpeech,
         }
         self.plugins = [plugin_mapping[plugin]() for plugin in enabled_plugins if plugin in plugin_mapping]
 
