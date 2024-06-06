@@ -43,8 +43,7 @@ class EdgeTTSTextToSpeech(Plugin):
                     voice = 'zh-HK-WanLungNeural'
                 elif lang == 'en-US':
                     voice = 'en-US-GuyNeural'
-                elif lang == 'zh-CN':
-                    voice = 'zh-CN-XiaoxiaoNeural'
+                
                 # 可以根據需要添加更多語言和語音的對應關係
                 else:
                     voice = 'zh-HK-WanLungNeural'  # 默認語音
