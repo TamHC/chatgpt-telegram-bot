@@ -26,10 +26,10 @@ GPT_3_MODELS = ("gpt-3.5-turbo", "gpt-3.5-turbo-0301", "gpt-3.5-turbo-0613")
 GPT_3_16K_MODELS = ("gpt-3.5-turbo-16k", "gpt-3.5-turbo-16k-0613", "gpt-3.5-turbo-1106", "gpt-3.5-turbo-0125")
 GPT_4_MODELS = ("gpt-4", "gpt-4-0314", "gpt-4-0613", "gpt-4-turbo-preview")
 GPT_4_32K_MODELS = ("gpt-4-32k", "gpt-4-32k-0314", "gpt-4-32k-0613")
-GPT_4_VISION_MODELS = ("gpt-4-vision-preview","gpt-4o","gpt-4o-2024-05-13")
+GPT_4_VISION_MODELS = ("gpt-4-vision-preview","gpt-4-turbo","gpt-4o","gpt-4o-2024-05-13")
 GPT_4_128K_MODELS = ("gpt-4-1106-preview","gpt-4-0125-preview","gpt-4-turbo-preview", "gpt-4-turbo", "gpt-4-turbo-2024-04-09")
 GPT_4O_MODELS = ("gpt-4o","gpt-4o-2024-05-13")
-GPT_ALL_MODELS = GPT_3_MODELS + GPT_3_16K_MODELS + GPT_4_MODELS + GPT_4_32K_MODELS + GPT_4_VISION_MODELS + GPT_4_128K_MODELS + GPT_4O_MODELS
+GROQ_MODELS = ("llama3-70b-8192", "mixtral-8x7b-32768") 
 
 def default_max_tokens(model: str) -> int:
     """
@@ -54,6 +54,10 @@ def default_max_tokens(model: str) -> int:
         return 4096
     elif model in GPT_4O_MODELS:
         return 4096
+    elif model == "llama3-70b-8192":
+        return base * 2
+    elif model == "mixtral-8x7b-32768":
+        return base * 8
 
 
 def are_functions_available(model: str) -> bool:
@@ -71,6 +75,8 @@ def are_functions_available(model: str) -> bool:
         return datetime.date.today() < datetime.date(2024, 6, 13)
     if model == 'gpt-4-vision-preview':
         return False
+    if model in GROQ_MODELS:
+        return True
     return True
 
 
@@ -111,7 +117,7 @@ class OpenAIHelper:
         :param plugin_manager: The plugin manager
         """
         http_client = httpx.AsyncClient(proxies=config['proxy']) if 'proxy' in config else None
-        self.client = openai.AsyncOpenAI(api_key=config['api_key'], http_client=http_client)
+        self.client = openai.AsyncOpenAI(api_key=config['api_key'], http_client=http_client, base_url=config['groq_api_base'])
         self.config = config
         self.plugin_manager = plugin_manager
         self.conversations: dict[int: list] = {}  # {chat_id: history}
@@ -624,22 +630,28 @@ class OpenAIHelper:
 
     def __max_model_tokens(self):
         base = 4096
-        if self.config['model'] in GPT_3_MODELS:
+        model = self.config['model']
+        if model in GPT_3_MODELS:
             return base
-        if self.config['model'] in GPT_3_16K_MODELS:
+        if model in GPT_3_16K_MODELS:
             return base * 4
-        if self.config['model'] in GPT_4_MODELS:
+        if model in GPT_4_MODELS:
             return base * 2
-        if self.config['model'] in GPT_4_32K_MODELS:
+        if model in GPT_4_32K_MODELS:
             return base * 8
-        if self.config['model'] in GPT_4_VISION_MODELS:
+        if model in GPT_4_VISION_MODELS:
             return base * 31
-        if self.config['model'] in GPT_4_128K_MODELS:
+        if model in GPT_4_128K_MODELS:
             return base * 31
-        if self.config['model'] in GPT_4O_MODELS:
+        if model in GPT_4O_MODELS:
             return base * 31
+        if model in GROQ_MODELS:
+            if model == "llama3-70b-8192":
+                return 8192
+            elif model == "mixtral-8x7b-32768":
+                return 32768
         raise NotImplementedError(
-            f"Max tokens for model {self.config['model']} is not implemented yet."
+            f"Max tokens for model {model} is not implemented yet."
         )
 
     # https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb
@@ -651,14 +663,17 @@ class OpenAIHelper:
         """
         model = self.config['model']
         try:
-            encoding = tiktoken.encoding_for_model(model)
+            if model in GROQ_MODELS:
+                encoding = tiktoken.get_encoding("cl100k_base") 
+            else:
+                encoding = tiktoken.encoding_for_model(model)
         except KeyError:
             encoding = tiktoken.get_encoding("gpt-3.5-turbo")
 
         if model in GPT_3_MODELS + GPT_3_16K_MODELS:
             tokens_per_message = 4  # every message follows <|start|>{role/name}\n{content}<|end|>\n
             tokens_per_name = -1  # if there's a name, the role is omitted
-        elif model in GPT_4_MODELS + GPT_4_32K_MODELS + GPT_4_VISION_MODELS + GPT_4_128K_MODELS + GPT_4O_MODELS:
+        elif model in GPT_4_MODELS + GPT_4_32K_MODELS + GPT_4_VISION_MODELS + GPT_4_128K_MODELS + GPT_4O_MODELS + GROQ_MODELS:
             tokens_per_message = 3
             tokens_per_name = 1
         else:
