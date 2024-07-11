@@ -157,6 +157,8 @@ Check out the [official API reference](https://platform.openai.com/docs/api-refe
 | `whois`                   | Query the whois domain database - by [@jnaskali](https://github.com/jnaskali)                                                                       | -                                                                    | `whois`             |
 | `webshot`                 | Screenshot a website from a given url or domain name - by [@noriellecruz](https://github.com/noriellecruz)                                          | -                                                                    |                     |
 | `auto_tts`                | Text to speech using OpenAI APIs - by [@Jipok](https://github.com/Jipok)                                                                            | -                                                                    |                     |
+| `edge_tts`                | Text to speech using Microsoft Edge's Text to Speech API                                                                        | -                                                                    |                     |
+| `web_scraping`            | A plugin to grab web content and perform related functions, using beautifulsoup                                                                        | -                                                                    |                     |
 
 #### Environment variables
 | Variable                          | Description                                                                                                                                                                                     | Default value                       |
