@@ -25,9 +25,11 @@ def main():
     if len(missing_values) > 0:
         logging.error(f'The following environment values are missing in your .env: {", ".join(missing_values)}')
         exit(1)
-
-    # Setup configurations
+        
     model = os.environ.get('OPENAI_MODEL', 'gpt-3.5-turbo')
+    model_parts = model.split('/')
+    default_provider = model_parts[0].lower() if len(model_parts) > 1 else 'openai' 
+    model = model_parts[-1]  # The actual model name (without the prefix)
     functions_available = are_functions_available(model=model)
     max_tokens_default = default_max_tokens(model=model)
     openai_config = {
@@ -61,6 +63,13 @@ def main():
         'tts_model': os.environ.get('TTS_MODEL', 'tts-1'),
         'tts_voice': os.environ.get('TTS_VOICE', 'alloy'),
     }
+
+    if default_provider == 'groq':
+        openai_config['groq_api_base'] = os.environ.get('GROQ_API_BASE', 'https://api.groq.com/openai/v1')
+        openai_config['api_key'] = os.environ.get('GROQ_API_KEY')
+    else: # default_provider == 'openai'
+        openai_config['groq_api_base'] = None
+        openai_config['api_key'] = os.environ['OPENAI_API_KEY']
 
     if openai_config['enable_functions'] and not functions_available:
         logging.error(f'ENABLE_FUNCTIONS is set to true, but the model {model} does not support it. '
