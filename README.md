@@ -4,7 +4,9 @@
 [![license](https://img.shields.io/badge/License-GPL%202.0-brightgreen.svg)](LICENSE)
 [![Publish Docker image](https://github.com/n3d1117/chatgpt-telegram-bot/actions/workflows/publish.yaml/badge.svg)](https://github.com/n3d1117/chatgpt-telegram-bot/actions/workflows/publish.yaml)
 
-A [Telegram bot](https://core.telegram.org/bots/api) that integrates with OpenAI's _official_ [ChatGPT](https://openai.com/blog/chatgpt/), [DALL·E](https://openai.com/product/dall-e-2) and [Whisper](https://openai.com/research/whisper) APIs to provide answers. Ready to use with minimal configuration required.
+A [Telegram bot](https://core.telegram.org/bots/api) that integrates with OpenAI's _official_ [ChatGPT](https://openai.com/blog/chatgpt/), [DALL·E](https://openai.com/product/dall-e-2) and [Whisper](https://openai.com/research/whisper) APIs to provide answers. It also supports OpenAI-compatible models from [Groq](https://www.groq.com/) API. Ready to use with minimal configuration required.
+
+To use Groq models, add the `groq/` prefix to the model name in the `OPENAI_MODEL` configuration variable. Currently, two models are supported: `groq/llama3-70b-8192` and `groq/mixtral-8x7b-32768`.
 
 ## Screenshots
 
@@ -41,6 +43,7 @@ A [Telegram bot](https://core.telegram.org/bots/api) that integrates with OpenAI
 - [x] (NEW!) Text-to-speech support [announced on November 6, 2023](https://platform.openai.com/docs/guides/text-to-speech) - by [@gilcu3](https://github.com/gilcu3)
 - [x] (NEW!) Vision support [announced on November 6, 2023](https://platform.openai.com/docs/guides/vision) - by [@gilcu3](https://github.com/gilcu3)
 - [x] (NEW!) GPT-4o model support [announced on May 12, 2024](https://openai.com/index/hello-gpt-4o/) - by [@err09r](https://github.com/err09r)
+- [x] (NEW!) Dynamically switch between OpenAI and Groq API based on model name prefix - by [@ginto-sakata](https://github.com/ginto-sakata)
 
 ## Additional features - help needed!
 If you'd like to help, check out the [issues](https://github.com/n3d1117/chatgpt-telegram-bot/issues) section and contribute!  
@@ -61,6 +64,7 @@ Customize the configuration by copying `.env.example` and renaming it to `.env`,
 | Parameter                   | Description                                                                                                                                                                                                                   |
 |-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `OPENAI_API_KEY`            | Your OpenAI API key, you can get it from [here](https://platform.openai.com/account/api-keys)                                                                                                                                 |
+| `GROQ_API_KEY`              | Your Groq API key (required only if using Groq models). you can get it from [here](https://console.groq.com/keys)                                                                                                             |
 | `TELEGRAM_BOT_TOKEN`        | Your Telegram bot's token, obtained using [BotFather](http://t.me/botfather) (see [tutorial](https://core.telegram.org/bots/tutorial#obtain-your-bot-token))                                                                  |
 | `ADMIN_USER_IDS`            | Telegram user IDs of admins. These users have access to special admin commands, information and no budget restrictions. Admin IDs don't have to be added to `ALLOWED_TELEGRAM_USER_IDS`. **Note**: by default, no admin (`-`) |
 | `ALLOWED_TELEGRAM_USER_IDS` | A comma-separated list of Telegram user IDs that are allowed to interact with the bot (use [getidsbot](https://t.me/getidsbot) to find your user ID). **Note**: by default, *everyone* is allowed (`*`)                       |
@@ -93,7 +97,7 @@ Check out the [Budget Manual](https://github.com/n3d1117/chatgpt-telegram-bot/di
 | `PROXY`                             | Proxy to be used for OpenAI and Telegram bot (e.g. `http://localhost:8080`)                                                                                                                                                                                                             | -                                  |
 | `OPENAI_PROXY`                      | Proxy to be used only for OpenAI (e.g. `http://localhost:8080`)                                                                                                                                                                                                                         | -                                  |
 | `TELEGRAM_PROXY`                    | Proxy to be used only for Telegram bot (e.g. `http://localhost:8080`)                                                                                                                                                                                                                   | -                                  |
-| `OPENAI_MODEL`                      | The OpenAI model to use for generating responses. You can find all available models [here](https://platform.openai.com/docs/models/)                                                                                                                                                    | `gpt-3.5-turbo`                    |
+| `OPENAI_MODEL`                      | The OpenAI model to use for generating responses. You can find all available models [here](https://platform.openai.com/docs/models/). To use models from Groq, add the `groq/` prefix, like: `groq/llama3-70b-8192` or `groq/mixtral-8x7b-32768`                                                                                                                                                  | `gpt-3.5-turbo`                    |
 | `OPENAI_BASE_URL`                   | Endpoint URL for unofficial OpenAI-compatible APIs (e.g., LocalAI or text-generation-webui)                                                                                                                                                                                             | Default OpenAI API URL             |
 | `ASSISTANT_PROMPT`                  | A system message that sets the tone and controls the behavior of the assistant                                                                                                                                                                                                          | `You are a helpful assistant.`     |
 | `SHOW_USAGE`                        | Whether to show OpenAI token usage information after each response                                                                                                                                                                                                                      | `false`                            |
