@@ -26,10 +26,10 @@ GPT_3_MODELS = ("gpt-3.5-turbo", "gpt-3.5-turbo-0301", "gpt-3.5-turbo-0613")
 GPT_3_16K_MODELS = ("gpt-3.5-turbo-16k", "gpt-3.5-turbo-16k-0613", "gpt-3.5-turbo-1106", "gpt-3.5-turbo-0125")
 GPT_4_MODELS = ("gpt-4", "gpt-4-0314", "gpt-4-0613", "gpt-4-turbo-preview")
 GPT_4_32K_MODELS = ("gpt-4-32k", "gpt-4-32k-0314", "gpt-4-32k-0613")
-GPT_4_VISION_MODELS = ("gpt-4-vision-preview","gpt-4-turbo","gpt-4o","gpt-4o-2024-05-13")
+GPT_4_VISION_MODELS = ("gpt-4-vision-preview","gpt-4-turbo","gpt-4o","gpt-4o-2024-05-13","gpt-4o-mini")
 GPT_4_128K_MODELS = ("gpt-4-1106-preview","gpt-4-0125-preview","gpt-4-turbo-preview", "gpt-4-turbo", "gpt-4-turbo-2024-04-09")
-GPT_4O_MODELS = ("gpt-4o","gpt-4o-2024-05-13")
-GROQ_MODELS = ("llama3-70b-8192", "mixtral-8x7b-32768") 
+GPT_4O_MODELS = ("gpt-4o","gpt-4o-2024-05-13","gpt-4o-mini")
+GROQ_MODELS = ("llama3-70b-8192", "mixtral-8x7b-32768", "llama3-groq-70b-8192-tool-use-preview") 
 
 def default_max_tokens(model: str) -> int:
     """
@@ -55,6 +55,8 @@ def default_max_tokens(model: str) -> int:
     elif model in GPT_4O_MODELS:
         return 4096
     elif model == "llama3-70b-8192":
+        return base * 2
+    elif model == "llama3-groq-70b-8192-tool-use-preview":
         return base * 2
     elif model == "mixtral-8x7b-32768":
         return base * 8
@@ -647,6 +649,8 @@ class OpenAIHelper:
             return base * 31
         if model in GROQ_MODELS:
             if model == "llama3-70b-8192":
+                return 8192
+            elif model == "llama3-groq-70b-8192-tool-use-preview":
                 return 8192
             elif model == "mixtral-8x7b-32768":
                 return 32768
