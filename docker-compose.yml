@@ -6,4 +6,29 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/app
+    environment:
+      BOT_LANGUAGE: zh-tw
+      TELEGRAM_BOT_TOKEN: 
+      ADMIN_USER_IDS: 
+      ALLOWED_TELEGRAM_USER_IDS: 
+      GROQ_API_KEY: 
+      OPENAI_API_KEY: 
+      OPENAI_BASE_URL: 
+      OPENAI_MODEL: gpt-3.5-turbo
+      ASSISTANT_PROMPT: 用繁體中文回答
+      VISION_MODEL: gpt-4-turbo
+      IGNORE_GROUP_VISION: false
+      ENABLE_VISION: true
+      ENABLE_IMAGE_GENERATION: true
+      ENABLE_TTS_GENERATION: true
+      ENABLE_TRANSCRIPTION: true
+      ENABLE_FUNCTIONS: true
+      SHOW_PLUGINS_USED: true
+      PLUGINS: weather,ddg_web_search,ddg_image_search,worldtimeapi,youtube_audio_extractor,web_scraping,edge_tts
+      WORLDTIME_DEFAULT_TIMEZONE: Asia/Hong_Kong
+      WOLFRAM_APP_ID:
+      
+
+    env_file:
+      - .env
     restart: unless-stopped
