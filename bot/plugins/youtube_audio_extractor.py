@@ -32,7 +32,7 @@ class YouTubeAudioExtractorPlugin(Plugin):
         link = kwargs['youtube_link']
         try:
             video = YouTube(link)
-            audio = video.streams.filter(only_audio=True, file_extension='mp4', 'webm']).first()
+            audio = video.streams.filter(only_audio=True, file_extension='mp4','webm']).first()
             output = re.sub(r'[^\w\-_\. ]', '_', video.title) + '.mp3'
             audio.download(filename=output)
             return {
